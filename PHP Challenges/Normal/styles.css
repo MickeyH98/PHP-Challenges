@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css?family=Shrikhand');
+/* CSS RESET */
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+/*MY CSS*/
+
+body {
+  text-align: center;
+  background-color: honeydew;
+  font-family: 'Shrikhand', cursive;
+}
+
+h1 {
+  font-size: 2em;
+  text-shadow: 0 3px 10px black;
+  color: tomato;
+  border-bottom: 3px solid black;
+  padding: 10px 0;
+}
+
+p {
+  color: skyblue;
+  text-shadow: 0 2px 2px black;
+  transition: 500ms;
+  width: 50%;
+  margin: 1% 25%;
+  padding: 5px 0;
+  border-bottom: 1px solid honeydew;
+}
+
+p:hover {
+  color: blue;
+  border-bottom: 1px solid black;
+  text-shadow: 1px 0px 5px white;
+  width: 80%;
+  margin: 1% 10%;
+  cursor: default;
+}
+
+p:nth-child(odd) {
+ color: pink;
+}
+
+p:nth-child(odd):hover {
+ color: red;
+}
+
+@media screen and (max-width: 400px){
+  p {
+    font-size: .9em;
+  }
+}
