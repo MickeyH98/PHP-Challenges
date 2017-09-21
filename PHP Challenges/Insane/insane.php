@@ -1,3 +1,5 @@
+<link href='./styles.css' rel='stylesheet'>
+
 <?php
 
 $suits = array (
@@ -57,64 +59,188 @@ function deckDealer($numOfCards) {
   return $cardsToDeal;
 }
 
+echo "<body>";
+
+echo "<h1>Blackjack</h1>";
+
 $deck = deckShuffler($deck);
 
 $playerMoney = 1000;
 
+//deal first 4 cards
+$player = array_merge([], deckDealer(2));
+$dealer = array_merge([], deckDealer(2));
+
+$counter = 0;
+$playerBlackjacks = 0;
+$dealerBlackjacks = 0;
+$bankHalfway = null;
+
 //while deck has cards
-while(sizeof($deck) > 0 && $playerMoney > 0){
-  echo "</br></br>-Turn Start-";
-  echo "</br>Player Money: " . $playerMoney;
-  $player = array_merge([], deckDealer(2));
-  $dealer = array_merge([], deckDealer(2));
+while(sizeof($deck) > 4 && $playerMoney > 0){
 
-  $playerHandValuesSum = array_sum($player);
-  $dealerHandValuesSum = array_sum($dealer);
-  echo "</br>Player Sum: " . $playerHandValuesSum;
-  echo "</br>Dealer Sum: " . $dealerHandValuesSum;
+  if($playerMoney == 500 && isset($counter) == false){
+    $bankHalfway = $counter;
+  }
 
-  if($playerMoney > 0){
+  $counter++;
+  echo "<div class='turnDiv'>";
+  echo "</br><h2>-Turn " . $counter . "-</h2>";
+  echo "</br>Deck size: ";
+  echo sizeof($deck);
+  echo "</br>Player Money: $" . $playerMoney;
+  $playerSum = array_sum($player);
+  $dealerSum = array_sum($dealer);
+  echo "</br>Player has " . $playerSum;
+  echo "</br>Dealer has " . $dealerSum;
+  echo "</br>";
 
-    //if playerhand > 21, dealer Wins
-    if($playerHandValuesSum > 21){
-      echo "</br>Player over 21, Dealer Wins!";
+  //if player <= 21
+  if($playerSum < 21 && $dealerSum < 21){
+    //player draw a card
+    $player = array_merge($player, deckDealer(1));
+    echo "</br>Player drew a card";
+    foreach($player as $card){
+      $playerHandValues = array_values($player);
+    }
+    echo "</br>Player's new hand: ";
+    $playerSum = array_sum($playerHandValues);
+    echo $playerSum;
+  }
+
+
+  //if dealer <= 17
+  if($dealerSum <= 17 && $playerSum < 21){
+    //dealer draw a card
+    $dealer = array_merge($dealer, deckDealer(1));
+    echo "</br>Dealer drew a card";
+    foreach($dealer as $card){
+      $dealerHandValues = array_values($dealer);
+    }
+    echo "</br>Dealer's new hand: ";
+    $dealerSum = array_sum($dealerHandValues);
+    echo $dealerSum;
+  }
+
+
+  //if dealer == player or dealer > 21 and player > 21
+  if($dealerSum == $playerSum || $dealerSum > 21 && $playerSum > 21){
+    //no one wins
+    echo "</br>Nobody wins!";
+    //reset hands
+    echo "</br>Reset Hands";
+    $player = array_merge([], deckDealer(2));
+    $dealer = array_merge([], deckDealer(2));
+  }
+  //else if dealer == 21 and player == 21
+  else if($dealerSum == 21 && $playerSum == 21){
+    //draw
+    echo "</br>Draw!";
+    //reset hands
+    echo "</br>Reset Hands";
+    $player = array_merge([], deckDealer(2));
+    $dealer = array_merge([], deckDealer(2));
+  }
+
+
+  //if player > dealer
+  if($playerSum > $dealerSum){
+    //if player > 21
+    if($playerSum > 21){
+      //dealer wins
+      echo "</br>Player Bust, Dealer Wins!";
       $playerMoney = $playerMoney - 100;
-
-    //if dealerhand > 21, player wins
-    }else if($dealerHandValuesSum > 21){
-      echo "</br>Dealer over 21, Player Wins!";
-      $playerMoney = $playerMoney + 200;
-
-    //if playerhand <= dealerhand, player Draw
-    }else if($playerHandValuesSum <= $dealerHandValuesSum){
-      //player draw a card
-      $player = array_merge($player, deckDealer(1));
-      echo "</br>Player drew a card";
-      foreach($player as $card){
-        $playerHandValues = array_values($player);
+      //reset hands
+      echo "</br>Reset Hands";
+      $player = array_merge([], deckDealer(2));
+      $dealer = array_merge([], deckDealer(2));
+    }
+    //else if player == 21
+    else {
+      if($playerSum == 21){
+        //Blackjack
+        echo "</br>Player's Blackjack!";
+        $playerBlackjacks = $playerBlackjacks + 1;
+        $playerMoney = $playerMoney + 200;
+        //reset hands
+        echo "</br>Reset Hands";
+        $player = array_merge([], deckDealer(2));
+        $dealer = array_merge([], deckDealer(2));
       }
-      echo "</br>Player Hand Values: ";
-      $playerHandValuesSum = array_sum($playerHandValues);
-      echo $playerHandValuesSum;
-
-    //if playerhand > dealerhand, dealer draw
-    }else if($playerHandValuesSum > $dealerHandValuesSum){
-      //dealer draw a card
-      $dealer = array_merge($dealer, deckDealer(1));
-      echo "</br>Dealer drew a card";
-      foreach($dealer as $card){
-        $dealerHandValues = array_values($dealer);
-      }
-      echo "</br>Dealer Hand Values: ";
-      $dealerHandValuesSum = array_sum($dealerHandValues);
-      echo $dealerHandValuesSum;
     }
   }
+
+
+  //if dealer > player
+  if($dealerSum > $playerSum){
+    //if dealer > 21
+    if($dealerSum > 21 && $playerSum < 21){
+      //player wins
+      echo "</br>Dealer Bust, Player Wins!";
+      $playerMoney = $playerMoney + 200;
+      //reset hands
+      echo "</br>Reset Hands";
+      $player = array_merge([], deckDealer(2));
+      $dealer = array_merge([], deckDealer(2));
+    }
+    //else if dealer == 21
+    else {
+	    if($dealerSum == 21){
+      	//Blackjack
+        echo "</br>Dealer's Blackjack!";
+        $dealerBlackjacks = $dealerBlackjacks + 1;
+        $playerMoney = $playerMoney - 100;
+        //reset hands
+        echo "</br>Reset Hands";
+        $player = array_merge([], deckDealer(2));
+        $dealer = array_merge([], deckDealer(2));
+  	  }else if($dealerSum > 21){
+        //dealer bust, player win
+        echo "</br>Dealer Bust, Player Wins!";
+        $playerMoney = $playerMoney + 200;
+        //reset hands
+        echo "</br>Reset Hands";
+        $player = array_merge([], deckDealer(2));
+        $dealer = array_merge([], deckDealer(2));
+      }
+	  }
+  }else if($playerSum > $dealerSum && $dealerSum >= 17 && $playerSum <= 21){
+    //player wins
+    echo "</br>Player Wins!";
+    $playerMoney = $playerMoney + 200;
+    //reset hands
+    echo "</br>Reset Hands";
+    $player = array_merge([], deckDealer(2));
+    $dealer = array_merge([], deckDealer(2));
+  }
+  echo "</div>";
 }
 
-echo "</br></br>";
-echo "Deck size: ";
-echo sizeof($deck);
+$winner;
+if($playerMoney > 1000){
+  $winner = "Player";
+}else if($playerMoney < 1000){
+  $winner = "Dealer";
+}else{
+  $winner = "No one";
+}
+
+
+echo "<div class='resultsDiv'>";
+echo "<h2 class='resultsHeader'>Results</h2>";
+echo "</br>";
+echo "<p>Games Played: " . $counter . "</p>";
+echo "<p>Winner: " . $winner . "</p>";
+echo "<p>Player Money: $" . $playerMoney . "</p>";
+if(isset($bankHalfway)){
+  echo "<p>Player reached $500 at: " . $bankHalfway . "</p>";
+}else{
+  echo "<p>Player never reached $500 </p>";
+}
+echo "<p>Player Blackjacks: " . $playerBlackjacks . "</p>";
+echo "<p>Dealer Blackjacks: " . $dealerBlackjacks . "</p>";
+echo "</div>";
+echo "</body>";
 
 ?>
 
